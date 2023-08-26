@@ -1,5 +1,5 @@
-import bcrypt from "bcryptjs";
-import jwt from "jsonwebtoken";
+import * as bcrypt from "bcryptjs";
+import * as jwt from "jsonwebtoken";
 import User from "../models/User";
 
 // Tipe data untuk hasil autentikasi yang berisi token akses dan token penyegar

@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import jwt from "jsonwebtoken";
+import * as jwt from "jsonwebtoken";
 
 const authorize = (roles: string[]) => {
   return (req: Request, res: Response, next: NextFunction) => {

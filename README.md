@@ -26,7 +26,7 @@ yarn install
 
 Salin berkas `.env.example` menjadi `.env` dan atur konfigurasi yang sesuai.
 
-3. Jalankan Aplikasi:
+3. Jalankan Aplikasi untuk proses development:
 
 ```
 npm run dev
@@ -68,21 +68,29 @@ yarn dev
   }
   ```
 
-6. Memperbarui Access Token (Refresh Token):
+7. Kompilasi TypeScript ke JavaScript :
 
-- Endpoint: `POST /auth/refresh`
-- Contoh permintaan:
-  ```json
-  {
-    "refreshToken": "refresh_token"
-  }
-  ```
-- Respon:
-  ```json
-  {
-    "token": "new_access_token"
-  }
-  ```
+TypeScript adalah bahasa yang dikompilasi, artinya kode TypeScript Anda harus diubah menjadi kode JavaScript sebelum dapat dijalankan oleh mesin Node.js atau browser. Proses ini dilakukan dengan menggunakan kompiler TypeScript.
+
+```bash
+npx tsc
+```
+
+Setelah kompilasi selesai, berkas JavaScript hasil kompilasi akan ada dalam direktori yang telah tentukan sebagai `"outDir"` dalam `tsconfig.json`.
+
+Kemudian jalankan
+
+```bash
+yarn start
+```
+
+atau
+
+```bash
+npm start
+```
+
+untuk menjalankan aplikasi
 
 ## Catatan
 

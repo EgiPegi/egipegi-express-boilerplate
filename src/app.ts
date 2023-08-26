@@ -1,6 +1,6 @@
-import express from "express";
-import cors from "cors";
-import dotenv from "dotenv";
+import * as express from "express";
+import * as cors from "cors";
+import * as dotenv from "dotenv";
 import authRoutes from "./routes/authRoutes";
 import protectedRoutes from "./routes/protectedRoutes";
 import db from "./configs/db";

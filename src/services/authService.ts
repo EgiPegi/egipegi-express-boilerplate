@@ -1,6 +1,8 @@
 import * as bcrypt from "bcryptjs";
 import * as jwt from "jsonwebtoken";
+import logger from "../utils/logger";
 import User from "../models/User";
+import RefreshToken from "../models/RefreshToken";
 
 // Tipe data untuk hasil autentikasi yang berisi token akses dan token penyegar
 interface AuthResult {
@@ -23,6 +25,7 @@ class AuthService {
 
     const hashedPassword = await bcrypt.hash(password, 10);
     await User.create({ username, password: hashedPassword, role });
+    logger.info("User registered:" + username);
   }
 
   // Fungsi untuk proses login dan menghasilkan token akses dan token penyegar
@@ -53,6 +56,8 @@ class AuthService {
       { expiresIn: "7d" }
     );
 
+    await RefreshToken.create({ userId: user._id, token: refreshToken });
+    logger.info("User logged in:" + username);
     return { token, refreshToken };
   }
 
@@ -63,6 +68,15 @@ class AuthService {
         refreshToken,
         process.env.JWT_SECRET || ""
       );
+
+      const token = await RefreshToken.findOneAndDelete({
+        token: refreshToken,
+      });
+
+      if (!token) {
+        return null;
+      }
+
       const user = await User.findOne({ username: decoded.username });
 
       if (!user) {
@@ -75,7 +89,15 @@ class AuthService {
         { expiresIn: "1h" }
       );
 
-      return { token: newAccessToken, refreshToken };
+      const newRefreshToken = jwt.sign(
+        { username: user.username, role: user.role },
+        process.env.JWT_SECRET || "",
+        { expiresIn: "7d" }
+      );
+
+      await RefreshToken.create({ userId: user._id, token: newRefreshToken });
+      logger.info("Token refreshed for:" + decoded.username);
+      return { token: newAccessToken, refreshToken: newRefreshToken };
     } catch (error) {
       return null;
     }

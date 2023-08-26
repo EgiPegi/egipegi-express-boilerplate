@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import AuthService from "../services/authService";
+import logger from "../utils/logger";
 
 class AuthController {
   // Menghandle proses registrasi pengguna baru
@@ -7,8 +8,10 @@ class AuthController {
     try {
       const { username, password, role } = req.body;
       await AuthService.register(username, password, role);
+      logger.info("User registered:" + username);
       res.status(201).json({ message: "User registered successfully" });
     } catch (error: any) {
+      logger.error("Registration error:" + error.message);
       res.status(400).json({ error: error.message }); // Mengirim pesan error yang lebih deskriptif
     }
   }
@@ -22,7 +25,7 @@ class AuthController {
       res.status(401).json({ message: "Invalid credentials" });
       return;
     }
-
+    logger.info("User logged in:" + username);
     res.json(authResult);
   }
 
@@ -42,9 +45,9 @@ class AuthController {
         res.status(403).json({ message: "Invalid refresh token" });
         return;
       }
-
       res.json(authResult);
     } catch (error) {
+      logger.info("Token refreshed error:" + error);
       res.status(500).json({ message: "Internal server error" });
     }
   }

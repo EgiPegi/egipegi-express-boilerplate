@@ -56,7 +56,7 @@ yarn dev
 - Contoh permintaan:
   ```json
   {
-    "username": "john",
+    "username": "egipegi",
     "password": "password123"
   }
   ```

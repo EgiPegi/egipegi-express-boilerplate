@@ -10,6 +10,12 @@ interface AuthResult {
   refreshToken: string;
 }
 
+interface UserWithoutPassword {
+  _id: string;
+  username: string;
+  role: string;
+}
+
 class AuthService {
   // Fungsi untuk mendaftarkan pengguna baru
   static async register(
@@ -57,8 +63,12 @@ class AuthService {
     );
 
     await RefreshToken.create({ userId: user._id, token: refreshToken });
+
+    const userWithoutPassword: any = user.toObject();
+    delete userWithoutPassword.password;
+
     logger.info("User logged in:" + username);
-    return { token, refreshToken };
+    return { ...userWithoutPassword, token, refreshToken };
   }
 
   // Fungsi untuk memperbarui token akses dengan menggunakan token penyegar
